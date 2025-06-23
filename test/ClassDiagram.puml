@@ -1,0 +1,97 @@
+@startuml DiagramPreliminar
+skinparam classAttributeIconSize 0
+
+package core {
+  class Card {
+    - numbers: List<Integer>
+    - rows: int
+    - cols: int
+    - marked: boolean[][]
+    + Card(numbers: List<Integer>, rows: int, cols: int)
+    + getNumbers(): List<Integer>
+    + getRows(): int
+    + getCols(): int
+    + markNumber(number: int): boolean
+    + checkHorizontalBingo(): boolean
+    + display(): void
+  }
+
+  class BallCaller <<Singleton>> extends behavioral.Subject {
+    - instance: BallCaller
+    - balls: List<Integer>
+    - calledBalls: List<Integer>
+    - random: Random
+    - minNum: int
+    - maxNum: int
+    - BallCaller(minNum: int, maxNum: int)
+    + getInstance(minNum: int, maxNum: int): BallCaller
+    + reset(): void
+    + callBall(): Integer
+    + getCalledBalls(): List<Integer>
+    + attach(observer: Observer): void
+    + detach(observer: Observer): void
+    + notifyObservers(ball: int): void
+  }
+
+  class Game {
+    - ballCaller: BallCaller
+    - players: List<Player>
+    + Game()
+    + addPlayer(player: Player): void
+    + playRound(): void
+    + startGame(): void
+  }
+}
+
+package patterns.creational {
+  class CardFactory {
+    - random: Random
+    + createCard(rows: int, cols: int, minNum: int, maxNum: int): Card
+    + createDefaultCard(): Card
+  }
+}
+
+package patterns.behavioral {
+  interface Observer {
+    + update(ball: int): void
+  }
+
+  abstract class Subject {
+    - observers: List<Observer>
+    + attach(observer: Observer): void
+    + detach(observer: Observer): void
+    + notifyObservers(ball: int): void
+  }
+}
+
+package players {
+  class Player implements behavioral.Observer {
+    - name: String
+    - card: core.Card
+    + Player(name: String, card: core.Card)
+    + getName(): String
+    + getCard(): core.Card
+    + update(ball: int): void
+    + checkBingo(): boolean
+    + displayCard(): void
+  }
+}
+
+package main {
+  class Main {
+    + main(args: String[]): void
+  }
+}
+
+core.Game -- core.BallCaller
+core.Game -- players.Player
+players.Player ..> core.Card
+patterns.creational.CardFactory ..> core.Card
+core.BallCaller --|> patterns.behavioral.Subject
+players.Player ..|> patterns.behavioral.Observer
+main.Main ..> core.Game
+main.Main ..> players.Player
+main.Main ..> patterns.creational.CardFactory
+main.Main ..> core.Card
+
+@enduml

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Patterns/Behavioral/XShapeWinStrategy.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Core/Game.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Patterns/Creational/GameDirector.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Patterns/Structural/GameFacade.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/UI/PlayerRegistrationGUI.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/UI/GameWindowGUI.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Patterns/Behavioral/WinStrategy.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Patterns/Behavioral/HorizontalWinStrategy.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Patterns/Behavioral/StartGameCommand.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/UI/MainMenuGUI.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Patterns/Creational/CardFactory.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Patterns/Creational/DefaultGameBuilder.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Patterns/Behavioral/LShapeWinStrategy.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Core/BallCaller.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Patterns/Behavioral/DiagonalWinStrategy.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Core/Card.java</file>
+            <file>file:/C:/Users/anaro/OneDrive/Documentos/NetBeansProjects/Bingo2.0/src/Patterns/Behavioral/VerticalWinStrategy.java</file>
+        </group>
+    </open-files>
+</project-private>
