@@ -10,14 +10,12 @@ public class MarkedNumberDecorator extends NumberFormatterDecorator {
 
     @Override
     public String format(int number, int row, int col, boolean isMarked, boolean isLastCalled, boolean inWinPattern) {
-        // Obtiene el formato base de los decoradores anteriores
         String base = super.format(number, row, col, isMarked, isLastCalled, inWinPattern);
         
         if (isMarked) {
-            // Añade el asterisco y el color verde usando HTML
-            return "<font color='green'>" + base + "*</font>";
+            // Un verde más brillante y un asterisco más visible o un ícono si usas imágenes
+            return "<font color='#4CAF50'><b>" + base + " &#10003;</b></font>"; // <-- CAMBIO: Verde más brillante y un checkmark
         }
-        // Si no está marcado, retorna el formato base más un espacio para mantener el alineamiento
-        return base + " "; 
+        return base + " "; // Mantener el espacio para alineación
     }
 }

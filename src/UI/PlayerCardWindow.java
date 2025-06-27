@@ -17,16 +17,14 @@ public class PlayerCardWindow extends JFrame {
     private Map<Card, JEditorPane> cardDisplayPanes;
     private JFrame parentFrame;
 
-    // Dimensiones base para un solo cartón
-    // Mantenemos los últimos valores, pero nos enfocaremos en la altura de la ventana.
-    private static final int CARD_WIDTH_BASE = 180;
-    private static final int CARD_HEIGHT_BASE = 210;
+     // Ajusta estas dimensiones para que los cartones se vean bien con los nuevos tamaños de fuente
+    private static final int CARD_WIDTH_BASE = 200; // Un poco más ancho
+    private static final int CARD_HEIGHT_BASE = 240; // Un poco más alto
     
-    private static final int PADDING = 8; 
-    private static final int TITLE_HEIGHT = 40; 
+    private static final int PADDING = 10; // Más padding
+    private static final int TITLE_HEIGHT = 45; // Más espacio para el título
 
-    // Nuevo: Un ajuste extra de altura para ventanas de una sola fila
-    private static final int SINGLE_ROW_HEIGHT_ADJUSTMENT = 20; // Añadir 20 píxeles extra si es una sola fila
+    private static final int SINGLE_ROW_HEIGHT_ADJUSTMENT = 30; // Ajuste para una sola fila
 
     public PlayerCardWindow(Player player, JFrame parentFrame) {
         this.player = player;
@@ -65,13 +63,16 @@ public class PlayerCardWindow extends JFrame {
     private void initUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(PADDING, PADDING, PADDING, PADDING)); 
+        mainPanel.setBackground(new Color(255, 240, 200)); // <-- CAMBIO: Fondo suave para la ventana del jugador
 
         JLabel playerNameLabel = new JLabel(player.getName(), SwingConstants.CENTER);
-        playerNameLabel.setFont(new Font("Arial", Font.BOLD, 18)); 
+        playerNameLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 22)); // <-- CAMBIO: Fuente cartoon y tamaño más grande
+        playerNameLabel.setForeground(new Color(139, 69, 19)); // <-- CAMBIO: Color de texto marrón
         playerNameLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, PADDING, 0)); 
         mainPanel.add(playerNameLabel, BorderLayout.NORTH);
 
         JPanel cardsPanel = new JPanel(new GridBagLayout());
+        cardsPanel.setOpaque(false); // Para que se vea el fondo del mainPanel
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(PADDING, PADDING, PADDING, PADDING); 
         gbc.fill = GridBagConstraints.BOTH;
@@ -88,12 +89,10 @@ public class PlayerCardWindow extends JFrame {
             cardPane.setOpaque(true);
             cardPane.setBackground(Color.WHITE); 
 
-            // El tamaño preferido para cada JEditorPane puede necesitar un ligero ajuste aquí si los números se cortan
-            // Mantendremos la misma lógica de antes: CARD_BASE - (2 * PADDING)
             cardPane.setPreferredSize(new Dimension(CARD_WIDTH_BASE - (2 * PADDING), CARD_HEIGHT_BASE - (2 * PADDING)));
             
-            cardPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); 
-
+            cardPane.setBorder(BorderFactory.createLineBorder(new Color(0, 150, 136), 4)); // <-- CAMBIO: Borde más grueso y color vibrante
+            
             cardDisplayPanes.put(card, cardPane);
             gbc.gridx = currentCardIndex % maxCols;
             gbc.gridy = currentCardIndex / maxCols;

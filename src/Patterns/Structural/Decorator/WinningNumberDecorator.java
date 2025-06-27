@@ -10,12 +10,11 @@ public class WinningNumberDecorator extends NumberFormatterDecorator {
 
     @Override
     public String format(int number, int row, int col, boolean isMarked, boolean isLastCalled, boolean inWinPattern) {
-        // Obtiene el formato base de los decoradores anteriores
         String base = super.format(number, row, col, isMarked, isLastCalled, inWinPattern);
         
         if (inWinPattern) {
-            // Envuelve el formato base con etiquetas HTML para negrita y color azul
-            return "<font color='blue'><b>" + base + "</b></font>";
+            // Un azul más brillante y un efecto de "brillo"
+            return "<font color='#2196F3'><b><u>" + base + "</u></b></font>"; // <-- CAMBIO: Azul más brillante y subrayado
         }
         return base;
     }
