@@ -19,7 +19,7 @@ public class PlayerCardWindow extends JFrame {
     // Restablecer estas dimensiones base a un tamaño "medio", manteniendo las ventanas grandes.
     // Esto significa que el JEditorPane será más grande que la tabla HTML interna.
     private static final int CARD_WIDTH_BASE = 200; // Volvemos a un tamaño que te gustaba para la ventana.
-    private static final int CARD_HEIGHT_BASE = 240; // Volvemos a un tamaño que te gustaba para la ventana.
+    private static final int CARD_HEIGHT_BASE = 200; // Volvemos a un tamaño que te gustaba para la ventana.
     
     // Mantenemos el padding razonable para la interfaz.
     private static final int PADDING = 10; 
@@ -79,7 +79,7 @@ public class PlayerCardWindow extends JFrame {
         gbc.insets = new Insets(PADDING, PADDING, PADDING, PADDING); 
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
+        gbc.weighty = 0.01;
 
         int currentCardIndex = 0;
         int maxCols = (player.getCards().size() > 2) ? 2 : player.getCards().size();
