@@ -13,9 +13,8 @@ public class MarkedNumberDecorator extends NumberFormatterDecorator {
         String base = super.format(number, row, col, isMarked, isLastCalled, inWinPattern);
         
         if (isMarked) {
-            // Un verde más brillante y un asterisco más visible o un ícono si usas imágenes
-            return "<font color='#4CAF50'><b>" + base + " &#10003;</b></font>"; // <-- CAMBIO: Verde más brillante y un checkmark
+            return "<font color='#4CAF50'><b>" + base + "</b></font>"; 
         }
-        return base + " "; // Mantener el espacio para alineación
+        return base; // ¡Importante: No añadir espacio aquí!
     }
 }

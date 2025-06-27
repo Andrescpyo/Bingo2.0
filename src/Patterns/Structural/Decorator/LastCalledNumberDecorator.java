@@ -13,8 +13,8 @@ public class LastCalledNumberDecorator extends NumberFormatterDecorator {
         String base = super.format(number, row, col, isMarked, isLastCalled, inWinPattern);
         
         if (isLastCalled) {
-            // Un rojo más intenso y un efecto de "burbuja" o un fondo si es posible
-            return "<span style='background-color: #FF5722; color: white; border-radius: 5px; padding: 2px 5px;'><b>" + base + "</b></span>"; // <-- CAMBIO: Fondo naranja, texto blanco, bordes redondeados
+            // Un rojo más intenso. Simplificado el span y estilos de fondo/bordes.
+            return "<font color='#FF5722'><b>" + base + "</b></font>"; 
         }
         return base;
     }

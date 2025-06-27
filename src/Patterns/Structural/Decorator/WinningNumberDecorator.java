@@ -13,8 +13,8 @@ public class WinningNumberDecorator extends NumberFormatterDecorator {
         String base = super.format(number, row, col, isMarked, isLastCalled, inWinPattern);
         
         if (inWinPattern) {
-            // Un azul más brillante y un efecto de "brillo"
-            return "<font color='#2196F3'><b><u>" + base + "</u></b></font>"; // <-- CAMBIO: Azul más brillante y subrayado
+            // Un azul más brillante y negrita. Simplificado el subrayado si causa problemas.
+            return "<font color='#2196F3'><b>" + base + "</b></font>"; 
         }
         return base;
     }
