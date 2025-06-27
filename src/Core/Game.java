@@ -97,10 +97,6 @@ public class Game extends Patterns.Behavioral.Observer.Subject {
         );
         Random random = new Random();
         winStrategy = strategies.get(random.nextInt(strategies.size()));
-
-        for (Player player : players) {
-            player.setWinStrategy(winStrategy);
-        }
     }
 
     // --- ¡NUEVOS MÉTODOS AÑADIDOS! ---

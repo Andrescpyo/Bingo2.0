@@ -1,86 +1,120 @@
+// Carpeta: Core
+// Archivo: Card.java
 package Core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Card {
+    private int[][] numbers; // Almacenará los números del cartón 5x5
+    private boolean[][] marked; // Almacenará el estado de marcado 5x5
+    private final int rows;
+    private final int cols;
 
-    private List<Integer> numbers;       // Lista de números en el cartón
-    private int rows;                    // Número de filas
-    private int cols;                    // Número de columnas
-    private boolean[][] marked;          // Matriz de casillas marcadas
+    // Rangos de números para cada columna B-I-N-G-O
+    private static final int[][] COLUMN_RANGES = {
+            {1, 15},   // B
+            {16, 30},  // I
+            {31, 45},  // N
+            {46, 60},  // G
+            {61, 75}   // O
+    };
+    private static final String[] COLUMN_HEADERS = {"B", "I", "N", "G", "O"};
 
-    /**
-     * Constructor de la clase Card.
-     *
-     * @param numbers Lista de números en el cartón.
-     * @param rows    Número de filas.
-     * @param cols    Número de columnas.
-     */
-    public Card(List<Integer> numbers, int rows, int cols) {
-        this.numbers = numbers;
+    public Card(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
+        this.numbers = new int[rows][cols];
         this.marked = new boolean[rows][cols];
-    }
 
-    /**
-     * Marca un número en el cartón si está presente.
-     *
-     * @param number Número a marcar.
-     * @return true si el número fue marcado; false si no estaba en el cartón.
-     */
-    public boolean markNumber(int number) {
-        int index = numbers.indexOf(number);
-        if (index != -1) {
-            int row = index / cols;
-            int col = index % cols;
-            marked[row][col] = true;
-            return true;
+        // Marcar la casilla central como FREE por defecto (si es 5x5)
+        if (rows == 5 && cols == 5) {
+            marked[2][2] = true; // La casilla central es 'FREE'
         }
-        return false;
+        fillCardNumbers(); // Llenar los números del cartón según las reglas de Bingo
     }
 
-    /**
-     * Devuelve la lista de números del cartón.
-     */
-    public List<Integer> getNumbers() {
-        return numbers;
+    // Constructor para pruebas o casos específicos (no se usará mucho en el UI de Bingo)
+    public Card(List<Integer> numbersList, int rows, int cols) {
+        this(rows, cols); // Llama al constructor principal para inicializar la matriz
+        // Sobreescribe los números generados por fillCardNumbers() si se proporcionan
+        if (numbersList != null && numbersList.size() == rows * cols) {
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    numbers[i][j] = numbersList.get(i * cols + j);
+                }
+            }
+        }
+        // Asegurar que la casilla FREE esté marcada
+        if (rows == 5 && cols == 5) {
+            marked[2][2] = true;
+        }
     }
 
-    /**
-     * Devuelve la matriz de celdas marcadas.
-     */
-    public boolean[][] getMarked() {
-        return marked;
+
+    private void fillCardNumbers() {
+        Random random = new Random();
+        for (int j = 0; j < cols; j++) { // Iterar por columnas
+            List<Integer> availableNumbers = new ArrayList<>();
+            int min = COLUMN_RANGES[j][0];
+            int max = COLUMN_RANGES[j][1];
+            for (int k = min; k <= max; k++) {
+                availableNumbers.add(k);
+            }
+            Collections.shuffle(availableNumbers, random); // Barajar los números disponibles para la columna
+
+            // Llenar 5 números para cada columna
+            for (int i = 0; i < rows; i++) {
+                if (i == 2 && j == 2 && rows == 5 && cols == 5) { // Si es la casilla central
+                    numbers[i][j] = 0; // Representa FREE, usaremos 0 o un valor especial
+                } else {
+                    numbers[i][j] = availableNumbers.remove(0); // Tomar el primer número barajado
+                }
+            }
+        }
     }
 
-    /**
-     * Devuelve el número de filas del cartón.
-     */
+    public boolean markNumber(int ball) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                // No intentar marcar la casilla FREE (ya está marcada)
+                if (i == 2 && j == 2 && rows == 5 && cols == 5) {
+                    continue;
+                }
+                if (numbers[i][j] == ball) {
+                    marked[i][j] = true;
+                    return true; // Número encontrado y marcado
+                }
+            }
+        }
+        return false; // Número no encontrado
+    }
+
+    public int getNumber(int row, int col) {
+        return numbers[row][col];
+    }
+
+    public boolean isMarked(int row, int col) {
+        return marked[row][col];
+    }
+
     public int getRows() {
         return rows;
     }
 
-    /**
-     * Devuelve el número de columnas del cartón.
-     */
     public int getCols() {
         return cols;
     }
 
-    /**
-     * Muestra el cartón en consola 
-     */
-    public void display() {
-        for (int i = 0; i < numbers.size(); i++) {
-            int number = numbers.get(i);
-            boolean isMarked = marked[i / cols][i % cols];
-            System.out.printf("%2d%s ", number, isMarked ? "*" : " ");
-            if ((i + 1) % cols == 0) {
-                System.out.println();
-            }
-        }
-        System.out.println();
+    public boolean[][] getMarked() {
+        return marked;
+    }
+
+    // Método para obtener los encabezados de columna
+    public static String[] getColumnHeaders() {
+        return COLUMN_HEADERS;
     }
 }

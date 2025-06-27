@@ -2,6 +2,7 @@ package UI;
 
 
 import Players.Player;
+import Patterns.Behavioral.Strategy.WinStrategy;
 import Patterns.Structural.Decorator.*;
 import Patterns.Structural.Facade.GameFacade;
 
@@ -197,15 +198,17 @@ public class GameWindowGUI extends JFrame {
         }
 
         boolean bingoAchieved = false;
+        WinStrategy currentWinStrategy = facade.getGame().getWinStrategy(); // Obtén la estrategia del juego
         for (Player player : facade.getPlayers()) {
             for (PlayerCardWindow pw : playerWindows) {
-                if (pw.getTitle().contains(player.getName())) { 
+                if (pw.getTitle().contains(player.getName())) {
                     pw.updateCardsDisplay(calledBall);
                     break;
                 }
             }
             
-            if (player.checkBingoGUI()) {
+            // Pasa la estrategia de victoria al método checkBingoGUI del jugador
+            if (player.checkBingoGUI(currentWinStrategy)) { //<-- MODIFICACIÓN AQUÍ
                 gameTimer.stop(); 
                 logTextArea.append("¡BINGO! " + player.getName() + " ha ganado con la estrategia: " + facade.getGame().getWinStrategy().getName() + "!\n");
                 logTextArea.setCaretPosition(logTextArea.getDocument().getLength());
