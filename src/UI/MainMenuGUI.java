@@ -1,6 +1,6 @@
 package UI;
 
-import Patterns.Behavioral.*;
+
 import Patterns.Behavioral.Command.Command;
 import Patterns.Behavioral.Command.ExitCommand;
 import Patterns.Behavioral.Command.ShowInstructionsCommand;

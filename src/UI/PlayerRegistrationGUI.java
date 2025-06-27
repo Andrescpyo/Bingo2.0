@@ -1,7 +1,6 @@
 package UI;
 
 import Core.Game;
-import Patterns.Creational.*;
 import Patterns.Creational.Builder.DefaultGameBuilder;
 import Patterns.Creational.Builder.GameBuilder;
 import Patterns.Creational.Builder.GameDirector;
@@ -103,13 +102,14 @@ public class PlayerRegistrationGUI {
     private void iniciarJuego() {
         GameBuilder builder = new DefaultGameBuilder();
         GameDirector director = new GameDirector(builder);
-        // The Game object created here does not yet have players or cards.
-        // It's a base Game object that the Facade will populate.
-        Game game = director.constructGame(new ArrayList<>(), 0); // Players and cards are added by facade.registerPlayers
+        // Construimos el objeto Game inicial. La fachada se encargará de añadir los jugadores y cartones.
+        Game game = director.constructGame(new ArrayList<>(), 0); 
 
         GameFacade facade = new GameFacade(game);
-        facade.registerPlayers(players); // This assigns the correct players and their desired card counts to the 'game' object within facade.
-        facade.initializeGameSettings(); // <--- NEW LINE: Initialize the win strategy here!
+        facade.registerPlayers(players); // Registra a los jugadores con sus cartones en la fachada/juego
+
+        // ¡MOVIMIENTO CLAVE! Inicializa la estrategia de victoria ANTES de crear GameWindowGUI
+        facade.initializeGameSettings(); 
 
         GameWindowGUI window = new GameWindowGUI(facade);
         window.setVisible(true);

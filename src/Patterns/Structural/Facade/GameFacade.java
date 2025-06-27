@@ -35,7 +35,8 @@ public class GameFacade {
     }
 
     /**
-     * Inicializa las configuraciones del juego, incluyendo la elección de la estrategia de victoria.
+     * Inicializa las configuraciones del juego, incluyendo la elección de la
+     * estrategia de victoria.
      */
     public void initializeGameSettings() {
         this.game.randomlyChooseWinStrategy();
@@ -47,6 +48,7 @@ public class GameFacade {
 
     /**
      * Juega una ronda del juego y devuelve la bola cantada.
+     *
      * @return La bola cantada, o -1 si el juego ha terminado.
      */
     public int playRound() {
@@ -65,4 +67,13 @@ public class GameFacade {
         return game.getPlayers();
     }
 
+    // Dentro de la clase GameFacade
+    public int getBallsRemaining() {
+        return game.getBallsRemaining(); // Asume que Game tiene este método
+    }
+
+// O, si prefieres un booleano para el GUI:
+    public boolean areBallsLeft() {
+        return game.getBallsRemaining() > 0;
+    }
 }
