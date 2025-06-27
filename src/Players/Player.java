@@ -50,10 +50,16 @@ public abstract class Player implements Observer {
 
         StringBuilder html = new StringBuilder();
         html.append("<html><head><style>");
-        html.append("table { width:100%; border-collapse: collapse; table-layout: fixed; }"); // fixed layout crucial para ancho de columna
-        html.append("th, td { border: 1px solid black; padding: 8px; text-align: center; vertical-align: middle; }"); // Centrado y padding
-        html.append("th { background-color:#f0f0f0; font-size:16pt; font-weight:bold; }"); // Estilo para encabezados
-        html.append("td { font-size:14pt; }"); // Ajusta el tamaño de la fuente si es necesario
+        html.append("body { margin: 0; padding: 0; }");
+
+        html.append("table { width:100%; border-collapse: collapse; table-layout: fixed; }");
+        
+        // Reducir el padding y el tamaño de la fuente al mínimo necesario
+        html.append("th, td { border: 1px solid black; padding: 4px; text-align: center; vertical-align: middle; }"); // Padding muy reducido
+        html.append("th { background-color:#f0f0f0; font-size:12pt; font-weight:bold; }"); // Fuente de encabezado más pequeña
+        html.append("td { font-size:10pt; }"); // Fuente de números muy pequeña
+        html.append("td font { color: purple; font-weight: bold; }"); 
+
         html.append("</style></head><body>");
 
         html.append("<table>");
@@ -75,7 +81,7 @@ public abstract class Player implements Observer {
                 
                 String displayValue;
                 if (i == 2 && j == 2 && card.getRows() == 5 && card.getCols() == 5 && number == 0) {
-                    displayValue = "<font color='purple'><b>FREE</b></font>";
+                    displayValue = "FREE";
                 } else {
                     displayValue = cardNumberFormatter.format(number, i, j, isMarked, isLastCalled, false);
                 }
@@ -85,7 +91,7 @@ public abstract class Player implements Observer {
             html.append("</tr>");
         }
         html.append("</table>");
-        html.append("</body></html>"); // Cierra tags HTML
+        html.append("</body></html>");
         return html.toString();
     }
 
