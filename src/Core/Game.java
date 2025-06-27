@@ -1,7 +1,7 @@
 package Core;
 
 import Players.Player;
-import Patterns.Behavioral.*;
+
 import Patterns.Behavioral.Strategy.DiagonalWinStrategy;
 import Patterns.Behavioral.Strategy.HorizontalWinStrategy;
 import Patterns.Behavioral.Strategy.LShapeWinStrategy;
@@ -13,23 +13,32 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.Collections; // ¡Asegúrate de importar esto!
 
 public class Game extends Patterns.Behavioral.Observer.Subject {
 
     private List<Player> players;
-    private List<Integer> availableBalls;
-    private List<Integer> calledBalls;
-    private BallCaller ballCaller;
+    private List<Integer> availableBalls; // Lista de bolas que AÚN NO HAN SIDO CANTADAS
+    private List<Integer> calledBalls;    // Bolas ya cantadas
+    private BallCaller ballCaller; // Instancia del bolillero
+
     private WinStrategy winStrategy;
 
     public Game() {
         this.players = new ArrayList<>();
         this.availableBalls = new ArrayList<>();
-        for (int i = 1; i <= 75; i++) {
+        // Inicializar availableBalls con todas las bolas y mezclarlas
+        for (int i = 1; i <= 75; i++) { // Asumiendo rango de 1 a 75
             availableBalls.add(i);
         }
+        Collections.shuffle(availableBalls); // ¡Importante para que salgan en orden aleatorio!
+        
         this.calledBalls = new ArrayList<>();
-        this.ballCaller = BallCaller.getInstance(1, 75);
+        // El BallCaller ahora solo extrae de la lista que le damos, o genera un número si es un generador puro.
+        // Si BallCaller ya tiene su propia lógica de bolillero, podríamos simplificar esto.
+        // Pero para que 'availableBalls' sea el maestro de la verdad, BallCaller necesita ajustarse o ser solo un "lector".
+        // Para el propósito de arreglar getBallsRemaining(), vamos a hacer que 'Game' controle las 'availableBalls'.
+        this.ballCaller = BallCaller.getInstance(1, 75); // Sigue usando tu BallCaller si tiene lógica específica.
     }
 
     public void addPlayer(Player player) {
@@ -54,12 +63,14 @@ public class Game extends Patterns.Behavioral.Observer.Subject {
      * @return La bola cantada en esta ronda, o -1 si no quedan más bolas.
      */
     public int playRoundGUI() {
-        if (availableBalls.isEmpty()) {
-            return -1; // Indicar que no se cantó una bola
+        if (availableBalls.isEmpty()) { // Si ya no quedan bolas en nuestra lista maestra
+            return -1; 
         }
 
-        int calledBall = ballCaller.callBall();
-        calledBalls.add(calledBall);
+        // Obtén la siguiente bola de la lista de disponibles
+        int calledBall = availableBalls.remove(0); // REMOVE la bola de la lista
+        
+        calledBalls.add(calledBall); // Añádela a las bolas ya cantadas
         notifyObservers(calledBall); // Notificar a todos los jugadores
 
         return calledBall;
@@ -90,5 +101,23 @@ public class Game extends Patterns.Behavioral.Observer.Subject {
         for (Player player : players) {
             player.setWinStrategy(winStrategy);
         }
+    }
+
+    // --- ¡NUEVOS MÉTODOS AÑADIDOS! ---
+
+    /**
+     * Retorna el número de bolas que aún no han sido cantadas.
+     * @return El número de bolas disponibles.
+     */
+    public int getBallsRemaining() {
+        return availableBalls.size();
+    }
+
+    /**
+     * Retorna verdadero si aún quedan bolas por cantar, falso en caso contrario.
+     * @return true si hay bolas restantes, false si no.
+     */
+    public boolean hasMoreBalls() {
+        return !availableBalls.isEmpty();
     }
 }
