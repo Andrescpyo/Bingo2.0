@@ -1,0 +1,396 @@
+@startuml
+!theme toy
+
+' Configuración para mejor visualización
+skinparam classAttributeIconSize 0
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+' Si el diagrama es demasiado ancho, puedes probar con:
+' top to bottom direction
+
+' ================================
+' 1. Clases "Cliente" (UI Principal)
+' ================================
+class Main {
+    +main(String[] args): void {static}
+}
+
+class GameWindowGUI {
+    -GameFacade facade
+    -JLabel currentBallLabel
+    -JPanel calledBallsDisplayPanel
+    -List<JLabel> ballLabels
+    -JTextPane winStrategyDisplayPane
+    -JButton startGameButton
+    -JButton exitButton
+    -JPanel mainPanel
+    -List<PlayerCardWindow> playerCardsWindows
+    +GameWindowGUI(GameFacade facade)
+    -initUI(): void
+    -playNextRound(ActionEvent e): void
+    -openPlayerCardWindows(): void
+    -updatePlayerCards(int lastCalledBall): void
+    -updateCalledBallsDisplay(int calledBall): void
+    -displayWinCondition(String winCondition): void
+    -resetGame(): void
+}
+note top of GameWindowGUI : Facade - Client\nObserver - Concrete Observer\nCommand - Invoker (Botones)
+
+class PlayerCardWindow {
+    -Player player
+    -Map<Card, JEditorPane> cardDisplayPanes
+    -Object parentFrame
+    -int CARD_WIDTH_BASE {static}
+    -int CARD_HEIGHT_BASE {static}
+    -int PADDING {static}
+    -int TITLE_HEIGHT {static}
+    -int SINGLE_ROW_HEIGHT_ADJUSTMENT {static}
+    +PlayerCardWindow(Player player, Object parentFrame)
+    -calculateAndSetWindowSize(): void
+    -initUI(): void
+    +updateCardsDisplay(Integer lastCalledBall): void
+    +setLocationBasedOnIndex(int index): void
+}
+note top of PlayerCardWindow : Observer - Concrete Observer
+
+' ================================
+' 2. Facade y Command
+' ================================
+class GameFacade {
+    -Game game
+    -CardFactory cardFactory
+    +GameFacade()
+    +GameFacade(Game game)
+    +registerPlayers(List<Player> players): void
+    +initializeGameSettings(): void
+    +startGameGUI(): String
+    +playRound(): int
+    +getCalledBallsHistory(): List<Integer>
+    +getGame(): Game
+    +getPlayers(): List<Player>
+    +getBallsRemaining(): int
+    +areBallsLeft(): boolean
+}
+note top of GameFacade : Facade - Facade
+
+interface Command {
+    +execute(): void
+}
+note top of Command : Command - Command Interface
+
+class StartGameCommand implements Command {
+    -GameFacade facade
+    -GameWindowGUI gui
+    +StartGameCommand(GameFacade facade, GameWindowGUI gui)
+    +execute(): void
+}
+note top of StartGameCommand : Command - Concrete Command
+
+class PlayRoundCommand implements Command {
+    -GameFacade facade
+    -GameWindowGUI gui
+    +PlayRoundCommand(GameFacade facade, GameWindowGUI gui)
+    +execute(): void
+}
+note top of PlayRoundCommand : Command - Concrete Command
+
+' ================================
+' 3. Core del Juego (Contexto de Strategy y Subject de Observer)
+' ================================
+class Game {
+    -List<Player> players
+    -BallCaller ballCaller
+    -List<Integer> calledBalls
+    -WinStrategy winStrategy
+    +Game()
+    +addPlayer(Player player)
+    +removePlayer(Player player)
+    +startGameGUI(): String
+    +playRoundGUI(): int
+    +checkWinners(): List<Player>
+    +getCalledBalls(): List<Integer>
+    +getPlayers(): List<Player>
+    +getBallsRemaining(): int
+    +randomlyChooseWinStrategy(): void
+    +clearGame(): void
+}
+
+class BallCaller {
+    -List<Integer> availableBalls
+    -List<Integer> calledBalls
+    +BallCaller()
+    +callNextBall(): int
+    +reset(): void
+    +getCalledBalls(): List<Integer>
+    +getRemainingBallsCount(): int
+}
+
+class Card {
+    -int[][] cardNumbers
+    -boolean[][] markedNumbers
+    -int rows
+    -int cols
+    -List<WinPattern> winPatterns
+    +Card(int rows, int cols)
+    +Card(List<Integer> numbers, int rows, int cols)
+    +markNumber(int number): boolean
+    +isMarked(int row, int col): boolean
+    +getNumber(int row, int col): int
+    +getRows(): int
+    +getCols(): int
+    +checkWin(List<Integer> calledNumbers): boolean
+    +getWinningNumbers(): Set<Integer>
+    +getMarkedWinPatterns(): List<WinPattern>
+    +updateWinPatterns(List<Integer> calledNumbers): void
+    +getCardDataForDisplay(): Map<String, Object>
+    +toString(): String
+    +getColumnHeaders(): String[] {static}
+}
+
+abstract class Player implements Observer {
+    -String name
+    -List<Card> cards
+    -ICardNumberFormatter cardNumberFormatter
+    -int tempCardCount
+    +Player(String name)
+    +getName(): String
+    +addCard(Card card): void
+    +removeCard(Card card): void
+    +update(int calledBall): void
+    +hasBingo(int calledBall): boolean
+    +setCardNumberFormatter(ICardNumberFormatter formatter): void
+    +getCardDisplayString(Card card, Integer lastCalledBall): String
+    +setTempCardCount(int count): void
+    +getTempCardCount(): int
+}
+note top of Player : Observer - Concrete Observer
+
+class Player1 extends Player {
+    +Player1(String name)
+}
+class Player2 extends Player {
+    +Player2(String name)
+}
+class Player3 extends Player {
+    +Player3(String name)
+}
+class Player4 extends Player {
+    +Player4(String name)
+}
+
+class WinPattern {
+    -List<Point> cells
+    +WinPattern(List<Point> cells)
+    +getCells(): List<Point>
+    +equals(Object obj): boolean
+    +hashCode(): int
+}
+
+' ================================
+' 4. Interfaces y Clases de Patrones (Builder, Factory, Strategy, Decorator, Observer/Subject)
+' ================================
+
+abstract class WinStrategy {
+    +<<abstract>> checkWin(Card card, List<Integer> calledNumbers): boolean
+    +<<abstract>> getDescription(): String
+    +<<abstract>> getWinPattern(Card card, List<Integer> calledNumbers): List<WinPattern>
+}
+note top of WinStrategy : Strategy - Interfaz/Abstract Strategy
+
+class FullCardWinStrategy extends WinStrategy {
+    +checkWin(Card card, List<Integer> calledNumbers): boolean
+    +getDescription(): String
+    +getWinPattern(Card card, List<Integer> calledNumbers): List<WinPattern>
+}
+note top of FullCardWinStrategy : Strategy - Concrete Strategy
+
+class LineWinStrategy extends WinStrategy {
+    +checkWin(Card card, List<Integer> calledNumbers): boolean
+    +getDescription(): String
+    +getWinPattern(Card card, List<Integer> calledNumbers): List<WinPattern>
+}
+note top of LineWinStrategy : Strategy - Concrete Strategy
+
+
+interface GameBuilder {
+    +setPlayers(List<Player> players): void
+    +setCardsPerPlayer(int cards): void
+    +buildGame(): void
+    +getGame(): Game
+}
+note top of GameBuilder : Builder - Builder Interface
+
+class DefaultGameBuilder implements GameBuilder {
+    -Game game
+    -List<Player> players
+    -int cardsPerPlayer
+    -CardFactory factory
+    +setPlayers(List<Player> players): void
+    +setCardsPerPlayer(int cards): void
+    +buildGame(): void
+    +getGame(): Game
+}
+note top of DefaultGameBuilder : Builder - Concrete Builder
+
+class GameDirector {
+    -GameBuilder builder
+    +GameDirector(GameBuilder builder)
+    +constructGame(List<Player> players, int cardsPerPlayer): Game
+}
+note top of GameDirector : Builder - Director
+
+
+class CardFactory {
+    -Random random
+    +createCard(int rows, int cols, int minNum, int maxNum): Card
+    +createDefaultCard(): Card
+}
+note top of CardFactory : Factory Method - Concrete Creator
+
+interface PlayerFactory {
+    +createPlayer(String name): Player
+}
+note top of PlayerFactory : Factory Method - Creator Interface
+
+class Player1Factory implements PlayerFactory {
+    +createPlayer(String name): Player
+}
+note top of Player1Factory : Factory Method - Concrete Creator
+
+class Player2Factory implements PlayerFactory {
+    +createPlayer(String name): Player
+}
+note top of Player2Factory : Factory Method - Concrete Creator
+
+class Player3Factory implements PlayerFactory {
+    +createPlayer(String name): Player
+}
+note top of Player3Factory : Factory Method - Concrete Creator
+
+class Player4Factory implements PlayerFactory {
+    +createPlayer(String name): Player
+}
+note top of Player4Factory : Factory Method - Concrete Creator
+
+
+interface ICardNumberFormatter {
+    +format(int number, int row, int col, boolean isMarked, boolean isLastCalled, boolean inWinPattern): String
+}
+note top of ICardNumberFormatter : Decorator - Component Interface
+
+class BaseNumberFormatter implements ICardNumberFormatter {
+    +format(int number, int row, int col, boolean isMarked, boolean isLastCalled, boolean inWinPattern): String
+}
+note top of BaseNumberFormatter : Decorator - Concrete Component
+
+abstract class NumberFormatterDecorator implements ICardNumberFormatter {
+    #ICardNumberFormatter decoratedFormatter
+    +NumberFormatterDecorator(ICardNumberFormatter decoratedFormatter)
+    +format(int number, int row, int col, boolean isMarked, boolean isLastCalled, boolean inWinPattern): String
+}
+note top of NumberFormatterDecorator : Decorator - Decorator Abstract
+
+class LastCalledNumberDecorator extends NumberFormatterDecorator {
+    +LastCalledNumberDecorator(ICardNumberFormatter decoratedFormatter)
+    +format(int number, int row, int col, boolean isMarked, boolean isLastCalled, boolean inWinPattern): String
+}
+note top of LastCalledNumberDecorator : Decorator - Concrete Decorator
+
+class MarkedNumberDecorator extends NumberFormatterDecorator {
+    +MarkedNumberDecorator(ICardNumberFormatter decoratedFormatter)
+    +format(int number, int row, int col, boolean isMarked, boolean isLastCalled, boolean inWinPattern): String
+}
+note top of MarkedNumberDecorator : Decorator - Concrete Decorator
+
+class WinningNumberDecorator extends NumberFormatterDecorator {
+    +WinningNumberDecorator(ICardNumberFormatter decoratedFormatter)
+    +format(int number, int row, int col, boolean isMarked, boolean isLastCalled, boolean inWinPattern): String
+}
+note top of WinningNumberDecorator : Decorator - Concrete Decorator
+
+interface Observer {
+    +update(int calledBall): void
+}
+note top of Observer : Observer - Observer Interface
+
+interface Subject {
+    +registerObserver(Observer o): void
+    +removeObserver(Observer o): void
+    +notifyObservers(int calledBall): void
+}
+note top of Subject : Observer - Subject Interface
+
+
+' ================================
+' Relaciones (Asociaciones y Dependencias)
+' ================================
+
+Main "1" --> "1" GameWindowGUI : inicia
+
+GameWindowGUI "1" --> "1" GameFacade : usa (Cliente)
+GameWindowGUI "1" -- "*" PlayerCardWindow : abre/gestiona (Observer)
+GameWindowGUI "1" --> "1" Command : invoca
+
+PlayerCardWindow "1" -- "1" Player : muestra cartones de (Observer)
+PlayerCardWindow "1" -- "*" Card : (a través de Player)
+PlayerCardWindow "1" --> "1" Object : (parentFrame) usa la ventana principal
+
+GameFacade "1" --> "1" Game : gestiona
+GameFacade "1" --> "1" CardFactory : usa para crear Cartones
+GameFacade "1" -- "*" Player : registra/usa
+
+Command <|.. StartGameCommand
+Command <|.. PlayRoundCommand
+StartGameCommand "1" --> "1" GameFacade : invoca (Receiver)
+StartGameCommand "1" --> "1" GameWindowGUI : necesita referencia al invoker
+PlayRoundCommand "1" --> "1" GameFacade : invoca (Receiver)
+PlayRoundCommand "1" --> "1" GameWindowGUI : necesita referencia al invoker
+
+Game "1" -- "*" Player : contiene (Observer)
+Game "1" -- "1" BallCaller : usa (Subject)
+Game "1" -- "1" WinStrategy : usa (Context)
+Game "1" -- "*" Card : (a través de Player)
+
+Card "1" -- "0..*" WinPattern : tiene
+
+WinStrategy <|-- FullCardWinStrategy
+WinStrategy <|-- LineWinStrategy
+
+Player "1" -- "*" Card : posee/tiene
+Player "1" -- "1" ICardNumberFormatter : usa (Componente Decorator)
+Player <|-- Player1
+Player <|-- Player2
+Player <|-- Player3
+Player <|-- Player4
+
+GameDirector "1" --> "1" GameBuilder : usa
+GameBuilder <|-- DefaultGameBuilder
+DefaultGameBuilder "1" -- "1" CardFactory : crea Card (a través de Factory Method)
+DefaultGameBuilder "1" -- "1" Game : construye
+DefaultGameBuilder "1" -- "*" Player : usa/recibe
+
+CardFactory ..> Card : crea (Producto)
+PlayerFactory <|-- Player1Factory
+PlayerFactory <|-- Player2Factory
+PlayerFactory <|-- Player3Factory
+PlayerFactory <|-- Player4Factory
+PlayerFactory ..> Player : crea (Producto)
+
+ICardNumberFormatter <|.. BaseNumberFormatter : implementa
+ICardNumberFormatter <|-- NumberFormatterDecorator
+NumberFormatterDecorator "1" *-- "1" ICardNumberFormatter : decora (Componente)
+NumberFormatterDecorator <|-- LastCalledNumberDecorator
+NumberFormatterDecorator <|-- MarkedNumberDecorator
+NumberFormatterDecorator <|-- WinningNumberDecorator
+
+' Relaciones para el patrón Observer
+Subject <|.. BallCaller : implementa
+Subject <|.. Game : implementa
+Observer <|.. Player : implementa
+Observer <|.. GameWindowGUI : implementa
+Observer <|.. PlayerCardWindow : implementa
+
+BallCaller --> "0..*" Observer : notifica
+Game --> "0..*" Observer : notifica
+
+@enduml
