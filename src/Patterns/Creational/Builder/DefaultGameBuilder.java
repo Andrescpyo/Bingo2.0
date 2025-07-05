@@ -1,7 +1,7 @@
 package Patterns.Creational.Builder;
 
 import Core.Game;
-import Patterns.Creational.FactoryMethod.CardFactory;
+import Patterns.Creational.AbstractFactory.CardFactory;
 import Core.Card;
 import Players.Player;
 

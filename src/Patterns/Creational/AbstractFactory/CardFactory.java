@@ -1,6 +1,6 @@
 // Carpeta: Patterns/Creational/FactoryMethod
 // Archivo: CardFactory.java
-package Patterns.Creational.FactoryMethod;
+package Patterns.Creational.AbstractFactory;
 
 import Core.Card;
 import java.util.ArrayList;

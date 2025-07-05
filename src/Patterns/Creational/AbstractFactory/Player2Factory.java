@@ -1,4 +1,4 @@
-package Patterns.Creational.FactoryMethod;
+package Patterns.Creational.AbstractFactory;
 
 import Players.Player;
 import Players.Player2;
