@@ -6,14 +6,40 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.net.URL;
 
+/**
+ * Clase ShowInstructionsCommand
+ *
+ * Implementación concreta de la interfaz Command.
+ * Este comando encapsula la acción de mostrar una ventana de instrucciones
+ * para el juego de Bingo.
+ *
+ * Rol en el patrón Command: Concrete Command (Comando Concreto)
+ * - Define un enlace entre una acción específica (mostrar instrucciones) y su receptor (la lógica de UI que crea la ventana).
+ * - Almacena el receptor (en este caso, implícitamente, la lógica de creación de la UI y el `parentFrame` para su disposición).
+ */
 public class ShowInstructionsCommand implements Command {
 
+    /**
+     * El JFrame padre que se va a cerrar antes de mostrar las instrucciones.
+     * Este es el "receptor" parcial de este comando, ya que interactúa con él.
+     */
     private JFrame parentFrame;
 
+    /**
+     * Constructor para ShowInstructionsCommand.
+     *
+     * @param parentFrame El JFrame actual que debe cerrarse antes de mostrar la ventana de instrucciones.
+     * Este es el contexto sobre el cual opera el comando.
+     */
     public ShowInstructionsCommand(JFrame parentFrame) {
         this.parentFrame = parentFrame;
     }
 
+    /**
+     * Ejecuta el comando para mostrar la ventana de instrucciones del juego.
+     * La lógica de creación y visualización de la ventana está encapsulada dentro de este método,
+     * desacoplando al "invocador" (por ejemplo, un botón) de los detalles de cómo se muestran las instrucciones.
+     */
     @Override
     public void execute() {
         parentFrame.dispose();
@@ -103,6 +129,12 @@ public class ShowInstructionsCommand implements Command {
         instructionsFrame.setVisible(true);
     }
 
+    /**
+     * Crea y devuelve un borde personalizado para la ventana de instrucciones.
+     * Este método es una parte auxiliar de la implementación visual del comando.
+     *
+     * @return Un objeto Border con un diseño gráfico personalizado.
+     */
     private Border createWindowBorder() {
         return new Border() {
             private final Color BORDER_COLOR = new Color(244, 67, 54);
@@ -155,6 +187,12 @@ public class ShowInstructionsCommand implements Command {
         };
     }
 
+    /**
+     * Crea y devuelve un borde compuesto para el área de texto de instrucciones.
+     * Este método es una parte auxiliar de la implementación visual del comando.
+     *
+     * @return Un objeto Border que combina un borde vacío y un borde de línea.
+     */
     private Border createTextBorder() {
         return BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(15, 15, 15, 15),
